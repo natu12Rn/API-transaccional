@@ -8,6 +8,7 @@ public class cuenta {
     private String tipoCuenta;
 
 
+
     public cuenta() {
     }
 

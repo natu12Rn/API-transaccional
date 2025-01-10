@@ -108,18 +108,19 @@ public class userHandler implements HttpHandler {
         user.setPassword(Utils.encrypt(obj.getString("password")));
         user.setEmail(obj.getString("email"));
         user.setName(obj.getString("name"));
-
+        user.setNumeroDocumento(obj.getString("documento"));
         user.getCuenta().setTipoCuenta(obj.getString("tipo"));
         crearCuenta(exchange, user);
     }
 
     private void crearCuenta(HttpExchange exchange, users user) throws IOException{
         user.getCuenta().setNumCuenta(numCuenta());
+        user.setActivo("Y");
         if (!cuentaDao.insert(user)){
             httpUtils.enviarRespuesta(exchange, 400, "Usuario ya registrado");
             return;
         }
-        user.getCuenta().setSaldo(new BigDecimal("0.00"));
+        user.getCuenta().setSaldo(new BigDecimal("1000000.00"));
         JSONObject obj = new JSONObject(user);
         httpUtils.enviarRespuesta(exchange, 200, obj.toString());
     }

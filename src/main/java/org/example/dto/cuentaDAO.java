@@ -39,7 +39,7 @@ public class cuentaDAO {
 
     public static List<users> listCuentas() {
         List<users> cuentas = new ArrayList<>();
-        String sql = "SELECT u.login, u.name, u.email, c.numero_cuenta, tc.nombre AS tipo_cuenta FROM sec_users u\n" +
+        String sql = "SELECT u.login, u.name, u.email, c.numero_cuenta, u.active ,tc.nombre AS tipo_cuenta FROM sec_users u\n" +
                 "LEFT JOIN public.cuenta c on u.login = c.login_usuario\n" +
                 "inner join public.tipo_cuenta tc on c.tipo_cuenta_id = tc.tipo_cuenta_id";
         try(Connection conn = Database.getConnection();
@@ -55,6 +55,7 @@ public class cuentaDAO {
                 user.setLogin(rs.getString("login"));
                 user.setName(rs.getString("name"));
                 user.setEmail(rs.getString("email"));
+                user.setActivo(rs.getString("active"));
                 user.getCuenta().setNumCuenta(rs.getString("numero_cuenta"));
                 user.getCuenta().setTipoCuenta(rs.getString("tipo_cuenta"));
                 cuentas.add(user);
@@ -69,7 +70,7 @@ public class cuentaDAO {
     }
 
     public boolean insert(users user) {
-        String sql = "CALL sp_crearcuenta(?,?,?,?,?,?,?)";
+        String sql = "CALL sp_crearcuenta(?,?,?,?,?,?,?,?,?)";
         try(Connection conn = Database.getConnection();
             CallableStatement cstmt = conn.prepareCall(sql) ) {
 
@@ -79,11 +80,13 @@ public class cuentaDAO {
             cstmt.setString(4, user.getEmail());
             cstmt.setString(5, user.getCuenta().getNumCuenta());
             cstmt.setString(6,user.getCuenta().getTipoCuenta());
-            cstmt.registerOutParameter(7, java.sql.Types.BOOLEAN);
+            cstmt.setString(7,user.getNumeroDocumento());
+            cstmt.setString(8,user.getActivo());
+            cstmt.registerOutParameter(9, java.sql.Types.BOOLEAN);
 
             cstmt.execute();
 
-            boolean result = cstmt.getBoolean(7);
+            boolean result = cstmt.getBoolean(9);
 
             return result;
         }catch (SQLException e){

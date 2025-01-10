@@ -56,6 +56,7 @@ public class cuentaHandler {
             obj.put("name", user.getName());
             obj.put("email", user.getEmail());
             obj.put("login", user.getLogin());
+            obj.put("activo", user.getActivo());
             obj.put("numero_cuenta",user.getCuenta().getNumCuenta());
             obj.put("tipo_cuenta", user.getCuenta().getTipoCuenta());
             jsonArray.put(obj);
