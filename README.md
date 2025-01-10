@@ -220,13 +220,41 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 - **Autenticación:** Bearer Token
 - **Descripción:** Permite obtener información de la cuenta, como número de cuenta, saldo y tipo de cuenta.
 
-#### Ejemplo de respuesta:
+**Detalles adicionales:** Si el usuario se autentifica como Administrador, la ruta devolverá un listado con todas las cuentas disponibles, incluyendo número de cuenta, tipo de cuenta y saldo.
+
+#### Ejemplo de respuesta (Usuario):
 ```json
 {
   "numCuenta": "176415451443",
   "tipoCuenta": "Ahorros",
   "saldo": 11501
 }
+```
+#### Ejemplo de respuesta (Admin):
+```json
+[
+    {
+        "tipo_cuenta": "Ahorros",
+        "name": "erick",
+        "numero_cuenta": "249381125604",
+        "login": "erick",
+        "email": "erick@gmail.com"
+    },
+    {
+        "tipo_cuenta": "Ahorros",
+        "name": "",
+        "numero_cuenta": "927464150960",
+        "login": "alex1",
+        "email": "alex@gmai.com"
+    },
+    {
+        "tipo_cuenta": "Ahorros",
+        "name": "",
+        "numero_cuenta": "421920917299",
+        "login": "robert",
+        "email": "robert@gmail.com"
+    }
+]
 ```
 
 ---
@@ -238,7 +266,9 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 - **Autenticación:** Bearer Token
 - **Descripción:** Permite visualizar todas las transacciones realizadas en la cuenta.
 
-#### Ejemplo de respuesta:
+**Detalles adicionales:** Si el usuario se autentica como Administrador, la ruta devolverá el historial completo de todas las transacciones de todas las cuentas, incluyendo el número de cuenta asociado.
+
+#### Ejemplo de respuesta (Usuario):
 ```json
 [
   {
@@ -264,6 +294,35 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
     "fecha_transaccion": "2025-01-09 15:41:06.325294",
     "numero_cuenta": "176415451443",
     "transaccion_id": 105
+  }
+]
+```
+#### Ejemplo de respuesta (Admin):
+```json
+[
+  {
+    "tipo_transaccion": "transferencia",
+    "descripcion": "",
+    "monto": 500,
+    "fecha_transaccion": "2025-01-09 12:20:46.527135",
+    "numero_cuenta": "985807879578",
+    "transaccion_id": 99,
+    "cuenta_destino": "506216641172"
+  },
+  {
+    "tipo_transaccion": "depósito",
+    "monto": 10000,
+    "fecha_transaccion": "2025-01-09 12:19:11.297734",
+    "numero_cuenta": "985807879578",
+    "transaccion_id": 98
+  },
+  {
+    "tipo_transaccion": "retiro",
+    "descripcion": "",
+    "monto": 10000,
+    "fecha_transaccion": "2025-01-09 10:58:01.060276",
+    "numero_cuenta": "985807879578",
+    "transaccion_id": 97
   }
 ]
 ```
