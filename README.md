@@ -4,7 +4,7 @@
 
 Este proyecto es un sistema transaccional que permite a los usuarios realizar diversas operaciones, tales como iniciar sesión, consultar información de la cuenta, realizar retiros, depósitos, transferencias y acceder a un registro detallado de todos los movimientos realizados.
 
----
+
 
 ## Características
 
@@ -14,7 +14,6 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 - **Consulta de cuenta:** Acceso a los detalles de la cuenta del usuario.
 - **Historial de transacciones:** Registro completo de las transacciones realizadas.
 
----
 
 ## Rutas
 
@@ -269,14 +268,12 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 ]
 ```
 
---- 
 
 ## Tecnologías utilizadas
 - **java**
 - **Gradle**
 - **PostgreSQL**
 
----
 
 ## Dependecias utilizadas
 - **JSON In java (org.json)**
