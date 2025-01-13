@@ -56,12 +56,13 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 #### Body
 ```json
 {
-  "login": "carlosDiaz45",
-  "password": "contraseñaFuerte123",
-  "passwordConfirm": "contraseñaFuerte123",
-  "email": "carlos.diaz@example.com",
-  "name": "Carlos Díaz",
-  "tipo": "Inversión"
+  "login": "juanPerez99",
+  "password": "miClaveFuerte123*",
+  "passwordConfirm": "miClaveFuerte123*",
+  "email": "juan.perez@example.com",
+  "name": "Juan Pérez",
+  "tipo": "Ahorros",
+  "documento": "1122334455"
 }
 ```
 
@@ -79,15 +80,17 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 #### Ejemplo de respuesta:
 ```json
 {
-  "password": "b0e9e8cfb872a8ef053f1cc74106182c",
-  "name": "Carlos Díaz",
-  "cuenta": {
-    "numCuenta": "249786167597",
-    "tipoCuenta": "Inversión",
-    "saldo": 0
-  },
-  "login": "carlosDiaz45",
-  "email": "carlos.diaz@example.com"
+    "password": "0127d854a7e7c63811c4b934c7e9436b",
+    "cuenta": {
+        "numCuenta": "988517952617",
+        "tipoCuenta": "Ahorros",
+        "saldo": 1000000
+    },
+    "name": "Juan Pérez",
+    "numeroDocumento": "1122334455",
+    "login": "juanPerez99",
+    "email": "juan.perez@example.com",
+    "activo": "Y"
 }
 ```
 
