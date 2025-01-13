@@ -27,6 +27,7 @@ public class userDAO {
             user.setName(rs.getString("name"));
             user.getCuenta().setNumCuenta(rs.getString("numero_cuenta"));
             user.setPrivAdmin(rs.getString("priv_admin"));
+
             return true;
         }catch (SQLException e){
             return false;
@@ -54,6 +55,7 @@ public class userDAO {
             user.setName(rs.getString("name"));
             user.getCuenta().setNumCuenta(rs.getString("numero_cuenta"));
             user.setPrivAdmin(rs.getString("priv_admin"));
+
             return true;
         }catch (SQLException e){
             return false;

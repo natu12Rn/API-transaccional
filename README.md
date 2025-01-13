@@ -20,7 +20,7 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 ### Login
 
 - **Método:** `POST`
-- **URL:** `http://localhost:8000/api/login`
+- **URL:** `https://localhost:8080/api/login`
 - **Descripción:** Permite iniciar sesión mediante credenciales (nombre de usuario y contraseña). Devuelve un token JWT para la autenticación.
 
 #### Body
@@ -50,7 +50,7 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 ### Registro de usuario
 
 - **Método:** `POST`
-- **URL:** `http://localhost:8000/api/registrar`
+- **URL:** `https://localhost:8080/api/registrar`
 - **Descripción:** Permite registrar nuevos usuarios y crear sus cuentas bancarias proporcionando datos como correo electrónico, nombre, contraseña y tipo de cuenta.
 
 #### Body
@@ -96,7 +96,7 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 ### Depósitos
 
 - **Método:** `POST`
-- **URL:** `http://localhost:8000/api/transaccion`
+- **URL:** `https://localhost:8080/api/transaccion`
 - **Autenticación:** Bearer Token
 - **Descripción:** Permite depositar dinero en la cuenta del usuario.
 
@@ -136,7 +136,7 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 ### Retiros
 
 - **Método:** `POST`
-- **URL:** `http://localhost:8000/api/transaccion`
+- **URL:** `https://localhost:8080/api/transaccion`
 - **Autenticación:** Bearer Token
 - **Descripción:** Permite retirar una cantidad específica de dinero. El monto mínimo permitido es de $10,000.00.
 
@@ -176,7 +176,7 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 ### Transferencias
 
 - **Método:** `POST`
-- **URL:** `http://localhost:8000/api/transaccion`
+- **URL:** `https://localhost:8080/api/transaccion`
 - **Autenticación:** Bearer Token
 - **Descripción:** Permite transferir dinero a otra cuenta mediante el número de cuenta destino.
 
@@ -216,7 +216,7 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 ### Consulta de cuenta
 
 - **Método:** `GET`
-- **URL:** `http://localhost:8000/api/cuenta`
+- **URL:** `https://localhost:8080/api/cuenta`
 - **Autenticación:** Bearer Token
 - **Descripción:** Permite obtener información de la cuenta, como número de cuenta, saldo y tipo de cuenta.
 
@@ -262,7 +262,7 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 ### Historial de transacciones
 
 - **Método:** `GET`
-- **URL:** `http://localhost:8000/api/transaccion`
+- **URL:** `https://localhost:8080/api/transaccion`
 - **Autenticación:** Bearer Token
 - **Descripción:** Permite visualizar todas las transacciones realizadas en la cuenta.
 

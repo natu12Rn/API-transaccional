@@ -16,17 +16,20 @@ public class handlerProtected implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String token = httpUtils.getTokenFromHeader(exchange);
+
         if (token == null) {
             httpUtils.enviarRespuesta(exchange,401,"token no proporcionado");
             return;
         }
+
         JWT jwt = JwtUtils.validacionToken(token);
+
         if (jwt == null) {
             httpUtils.enviarRespuesta(exchange,401,"token no validado");
             return;
         }
-        String [] path = exchange.getRequestURI().getPath().split("/");
 
+        String [] path = exchange.getRequestURI().getPath().split("/");
         switch (path[2]){
             case "cuenta":
                 cuentaHandler.handle(exchange, jwt);

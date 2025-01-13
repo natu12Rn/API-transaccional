@@ -19,6 +19,7 @@ public class transaccionDAO {
             Statement stmt = conn.createStatement()){
 
             ResultSet rs = stmt.executeQuery(sql);
+
             while (rs.next()) {
                 transaccion transaccion = new transaccion();
                 transaccion.setTransaccionId(rs.getInt("transaccion_id"));
@@ -46,12 +47,14 @@ public class transaccionDAO {
         String sql = "SELECT t.transaccion_id, c.numero_cuenta, t.tipo_transaccion, t.monto, t.cuenta_destino, t.descripcion, t.fecha_transaccion FROM transaccion t\n" +
                 "inner join public.cuenta c on c.cuenta_id = t.cuenta_id\n" +
                 "where t.cuenta_id = (SELECT cuenta_id from  cuenta where numero_cuenta = ?)";
+
         try(    Connection conn = Database.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql)){
 
             ps.setString(1, numCuenta);
 
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
                 transaccion transaccion = new transaccion();
                 transaccion.setTransaccionId(rs.getInt("transaccion_id"));
@@ -89,7 +92,6 @@ public class transaccionDAO {
 
         }catch (SQLException e){
             e.printStackTrace();
-            return;
         }
     }
 
@@ -106,11 +108,8 @@ public class transaccionDAO {
 
             return cstmt.getBoolean(3);
 
-
         }catch (SQLException e){
-
             e.printStackTrace();
-
             return false;
         }
 
@@ -132,7 +131,6 @@ public class transaccionDAO {
 
         }catch(SQLException e){
             e.printStackTrace();
-
             return false;
         }
     }
@@ -154,7 +152,6 @@ public class transaccionDAO {
 
         }catch(SQLException e){
             e.printStackTrace();
-
             return false;
         }
     }

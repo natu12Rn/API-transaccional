@@ -44,6 +44,7 @@ public class transaccionHandler  {
 
     private void handleGet(HttpExchange exchange, JWT jwt) throws IOException {
         List<transaccion> transaccionList;
+
         if (JwtUtils.valAdmin(jwt)) {
              transaccionList = transaccionDAO.buscarTodas();
         }else {
@@ -53,7 +54,9 @@ public class transaccionHandler  {
             HttpUtils.enviarRespuesta(exchange, 500, "No se encontro las transacciones");
             return;
         }
+
         JSONArray jsonArray = new JSONArray();
+
         for (transaccion transaccion : transaccionList) {
             JSONObject obj = new JSONObject();
             obj.put("transaccion_id", transaccion.getTransaccionId());
@@ -65,6 +68,7 @@ public class transaccionHandler  {
             obj.put("fecha_transaccion", transaccion.getFechaTransaccion());
             jsonArray.put(obj);
         }
+
         HttpUtils.enviarRespuesta(exchange, 200, jsonArray.toString());
 
     }
@@ -104,12 +108,14 @@ public class transaccionHandler  {
             HttpUtils.enviarRespuesta(exchange, 400, "No se puede depositar");
             return;
         }
+
         JSONObject result = new JSONObject(T);
         HttpUtils.enviarRespuesta(exchange, 200, result.toString());
     }
 
     private void retiro(transaccion T, HttpExchange exchange, String numCuenta  ) throws IOException, SQLException {
         BigDecimal minimo = new BigDecimal("10000.00");
+
         if (T.getMonto().compareTo(minimo) < 0){
             HttpUtils.enviarRespuesta(exchange, 400, "Monto por debajo del minimo");
             return;

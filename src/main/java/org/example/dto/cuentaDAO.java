@@ -15,6 +15,7 @@ public class cuentaDAO {
         String sql = "SELECT C.saldo, tc.nombre AS tipo_cuenta FROM cuenta c\n" +
                 "INNER JOIN public.tipo_cuenta tc on tc.tipo_cuenta_id = c.tipo_cuenta_id\n" +
                 "WHERE numero_cuenta= ?";
+
         try(Connection conn = Database.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -47,9 +48,11 @@ public class cuentaDAO {
 
             stmt.execute(sql);
             ResultSet rs = stmt.executeQuery(sql);
+
             if(!rs.next()) {
                 return null;
             }
+
             while(rs.next()) {
                 users user = new users();
                 user.setLogin(rs.getString("login"));

@@ -37,20 +37,25 @@ public class cuentaHandler {
 
     public void handlerGetUser(HttpExchange exchange, JWT jwt) throws IOException {
         cuenta cuenta = cuentaDAO.CuentaPersonal(jwt);
+
         if (cuenta == null){
             httpUtils.enviarRespuesta(exchange, 400, "No se encontro la cuenta");
             return;
         }
+
         JSONObject obj = new JSONObject(cuenta);
         httpUtils.enviarRespuesta(exchange, 200, obj.toString());
     }
 
     public void handlerGetAdmin (HttpExchange exchange) throws IOException {
         List<users> listUser = cuentaDAO.listCuentas();
+
         if (listUser == null){
             httpUtils.enviarRespuesta(exchange, 400, "No existente");
         }
+
         JSONArray jsonArray = new JSONArray();
+
         for (users user : listUser){
             JSONObject obj = new JSONObject();
             obj.put("name", user.getName());
@@ -61,6 +66,7 @@ public class cuentaHandler {
             obj.put("tipo_cuenta", user.getCuenta().getTipoCuenta());
             jsonArray.put(obj);
         }
+
         httpUtils.enviarRespuesta(exchange, 200, jsonArray.toString());
     }
 

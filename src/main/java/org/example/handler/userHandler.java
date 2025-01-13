@@ -26,6 +26,7 @@ public class userHandler implements HttpHandler {
                 httpUtils.enviarRespuesta(exchange,405, "metodo no existente");
                 return;
             }
+
             String [] path = exchange.getRequestURI().getPath().split("/");
             switch (path[2]){
                 case "login":
@@ -59,6 +60,7 @@ public class userHandler implements HttpHandler {
     private void login (users user, HttpExchange exchange) throws IOException{
         String encryptor = Utils.encrypt(user.getPassword());
         user.setPassword(encryptor);
+
         if (user.getLogin() != null) {
             if (!dao.validacion(user)){
                 httpUtils.enviarRespuesta(exchange, 401 , "no se encontro la cuenta revise");
@@ -102,24 +104,29 @@ public class userHandler implements HttpHandler {
 
         users user = new users();
         user.setLogin(obj.getString("login"));
+
         if (!obj.getString("password").equals(obj.getString("passwordConfirm"))) {
             httpUtils.enviarRespuesta(exchange, 400 , "problemas con el password");
         }
+
         user.setPassword(Utils.encrypt(obj.getString("password")));
         user.setEmail(obj.getString("email"));
         user.setName(obj.getString("name"));
         user.setNumeroDocumento(obj.getString("documento"));
         user.getCuenta().setTipoCuenta(obj.getString("tipo"));
+
         crearCuenta(exchange, user);
     }
 
     private void crearCuenta(HttpExchange exchange, users user) throws IOException{
         user.getCuenta().setNumCuenta(numCuenta());
         user.setActivo("Y");
+
         if (!cuentaDao.insert(user)){
             httpUtils.enviarRespuesta(exchange, 400, "Usuario ya registrado");
             return;
         }
+
         user.getCuenta().setSaldo(new BigDecimal("1000000.00"));
         JSONObject obj = new JSONObject(user);
         httpUtils.enviarRespuesta(exchange, 200, obj.toString());
@@ -130,6 +137,7 @@ public class userHandler implements HttpHandler {
         int primerNumero = random.nextInt(9)+1;
         long restoNumeros = random.nextLong(1_000_000_000_00L);
         String numero = String.format("%1d%011d", primerNumero, restoNumeros);
+
         if (!cuentaDao.validacionNumCuneta(numero)){
             return numCuenta();
         }
