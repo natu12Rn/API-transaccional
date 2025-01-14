@@ -3,6 +3,7 @@ package org.example.dto;
 
 import org.example.config.Database;
 import org.example.models.transaccion;
+import org.example.utils.LogsUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public class transaccionDAO {
                 "inner join public.cuenta c on c.cuenta_id = t.cuenta_id ORDER BY fecha_transaccion DESC";
         try(Connection conn = Database.getConnection();
             Statement stmt = conn.createStatement()){
+
+            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
 
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -37,7 +40,7 @@ public class transaccionDAO {
             return transaccions;
 
         }catch (SQLException e) {
-            e.printStackTrace();
+            LogsUtils.logError(e.getMessage());
             return null;
         }
     }
@@ -50,6 +53,8 @@ public class transaccionDAO {
 
         try(    Connection conn = Database.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql)){
+
+            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
 
             ps.setString(1, numCuenta);
 
@@ -70,7 +75,7 @@ public class transaccionDAO {
             return transaccions;
 
         }catch (SQLException e){
-            e.printStackTrace();
+            LogsUtils.logError(e.getMessage());
             return null;
         }
 
@@ -80,6 +85,8 @@ public class transaccionDAO {
         String sql= "SELECT cuenta_id FROM cuenta WHERE numero_cuenta = ?";
         try(    Connection conn = Database.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)){
+
+            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
 
             ps.setString(1, numCuenta);
             ResultSet rs = ps.executeQuery();
@@ -91,7 +98,7 @@ public class transaccionDAO {
             transaccion.setCuentaId(rs.getInt("cuenta_id"));
 
         }catch (SQLException e){
-            e.printStackTrace();
+            LogsUtils.logError(e.getMessage());
         }
     }
 
@@ -99,6 +106,8 @@ public class transaccionDAO {
         String sql= "CALL sp_deposito(?,?,?)";
         try(    Connection conn = Database.getConnection();
                 CallableStatement cstmt = conn.prepareCall(sql)){
+
+            LogsUtils.logInfo("Ejecutando SP -> \n " + sql);
 
             cstmt.setBigDecimal(1, transaccion.getMonto());
             cstmt.setString(2, numCuenta );
@@ -109,7 +118,7 @@ public class transaccionDAO {
             return cstmt.getBoolean(3);
 
         }catch (SQLException e){
-            e.printStackTrace();
+            LogsUtils.logError(e.getMessage());
             return false;
         }
 
@@ -119,6 +128,8 @@ public class transaccionDAO {
         String sql= "CALL sp_retiro(?,?,?,?)";
         try(    Connection conn = Database.getConnection();
                 CallableStatement cstmt = conn.prepareCall(sql)){
+
+            LogsUtils.logInfo("Ejecutando SP -> \n " + sql);
 
             cstmt.setBigDecimal(1, transaccion.getMonto());
             cstmt.setString(2, numCuenta);
@@ -130,7 +141,7 @@ public class transaccionDAO {
             return cstmt.getBoolean(4);
 
         }catch(SQLException e){
-            e.printStackTrace();
+            LogsUtils.logError(e.getMessage());
             return false;
         }
     }
@@ -139,6 +150,8 @@ public class transaccionDAO {
         String sql= "CALL sp_transaccion(?,?,?,?,?)";
         try(    Connection conn = Database.getConnection();
                 CallableStatement cstmt = conn.prepareCall(sql)){
+
+            LogsUtils.logInfo("Ejecutando SP -> \n " + sql);
 
             cstmt.setBigDecimal(1, transaccion.getMonto());
             cstmt.setString(2, numCuenta);
@@ -151,7 +164,7 @@ public class transaccionDAO {
             return  cstmt.getBoolean(5);
 
         }catch(SQLException e){
-            e.printStackTrace();
+            LogsUtils.logError(e.getMessage());
             return false;
         }
     }

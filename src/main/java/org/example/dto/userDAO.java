@@ -2,6 +2,7 @@ package org.example.dto;
 
 import org.example.config.Database;
 import org.example.models.users;
+import org.example.utils.LogsUtils;
 
 import java.sql.*;
 
@@ -15,12 +16,15 @@ public class userDAO {
         try(Connection conn = Database.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
 
+            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
+
             ps.setString(1, user.getPassword());
             ps.setString(2, user.getLogin());
 
             ResultSet rs = ps.executeQuery();
 
             if(!rs.next()){
+                LogsUtils.logWarn("No se encontro el usuario");
                 return false;
             }
 
@@ -30,6 +34,7 @@ public class userDAO {
 
             return true;
         }catch (SQLException e){
+            LogsUtils.logError(e.getMessage());
             return false;
         }
 
@@ -43,12 +48,15 @@ public class userDAO {
         try(Connection conn = Database.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql)){
 
+            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
+
             ps.setString(1, user.getPassword());
             ps.setString(2, user.getEmail());
 
             ResultSet rs = ps.executeQuery();
 
             if(!rs.next()){
+                LogsUtils.logWarn("No se encontro el usuario");
                 return false;
             }
 
@@ -58,6 +66,7 @@ public class userDAO {
 
             return true;
         }catch (SQLException e){
+            LogsUtils.logError(e.getMessage());
             return false;
         }
     }

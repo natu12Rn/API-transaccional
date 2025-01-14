@@ -40,3 +40,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+## archivos extras ##
+keystore.jks
+logs

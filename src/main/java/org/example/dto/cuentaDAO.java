@@ -1,15 +1,18 @@
 package org.example.dto;
 
 import io.fusionauth.jwt.domain.JWT;
+
 import org.example.config.Database;
 import org.example.models.cuenta;
 import org.example.models.users;
+import org.example.utils.LogsUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class cuentaDAO {
+
     public static cuenta CuentaPersonal(JWT jwt) {
         cuenta cuenta = new cuenta();
         String sql = "SELECT C.saldo, tc.nombre AS tipo_cuenta FROM cuenta c\n" +
@@ -19,11 +22,15 @@ public class cuentaDAO {
         try(Connection conn = Database.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
+
             ps.setString(1, jwt.getString("numCuenta"));
             ResultSet rs = ps.executeQuery();
 
             if(!rs.next()) {
+                LogsUtils.logWarn("No se encontro la cuenta: "+ jwt.getString("numCuenta"));
                 return null;
+
             }
 
             cuenta.setNumCuenta(jwt.getString("numCuenta"));
@@ -33,7 +40,7 @@ public class cuentaDAO {
             return cuenta;
 
         }catch (SQLException e){
-            e.printStackTrace();
+            LogsUtils.logError(e.getMessage());
             return null;
         }
     }
@@ -46,10 +53,13 @@ public class cuentaDAO {
         try(Connection conn = Database.getConnection();
             Statement stmt = conn.createStatement();){
 
+            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
+
             stmt.execute(sql);
             ResultSet rs = stmt.executeQuery(sql);
 
             if(!rs.next()) {
+                LogsUtils.logWarn("No se encontraron cuentas");
                 return null;
             }
 
@@ -67,7 +77,7 @@ public class cuentaDAO {
             return cuentas;
 
         }catch (SQLException e){
-            e.printStackTrace();
+            LogsUtils.logError(e.getMessage());
             return null;
         }
     }
@@ -76,6 +86,8 @@ public class cuentaDAO {
         String sql = "CALL sp_crearcuenta(?,?,?,?,?,?,?,?,?)";
         try(Connection conn = Database.getConnection();
             CallableStatement cstmt = conn.prepareCall(sql) ) {
+
+            LogsUtils.logInfo("Ejecutando SP -> \n " + sql);
 
             cstmt.setString(1,user.getLogin());
             cstmt.setString(2,user.getPassword());
@@ -90,9 +102,10 @@ public class cuentaDAO {
             cstmt.execute();
 
             boolean result = cstmt.getBoolean(9);
-
+            LogsUtils.logInfo("Cuenta creada -> " + result);
             return result;
         }catch (SQLException e){
+            LogsUtils.logError(e.getMessage());
             return false;
         }
     }
@@ -102,15 +115,20 @@ public class cuentaDAO {
         try(Connection conn = Database.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
+            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
+
             pstmt.setString(1, numCuneta);
             ResultSet rs = pstmt.executeQuery();
 
             if (!rs.next()) {
+                LogsUtils.logWarn("existencia de numero de cuenta -> "+ numCuneta);
                 return false;
             }
 
+            LogsUtils.logInfo("Numero de cuenta valido -> "+ numCuneta);
             return true;
         }catch (SQLException e){
+            LogsUtils.logError(e.getMessage());
             return false;
         }
     }

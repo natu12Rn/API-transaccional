@@ -7,11 +7,13 @@ import org.example.models.cuenta;
 import org.example.models.users;
 import org.example.utils.HttpUtils;
 import org.example.utils.JwtUtils;
+import org.example.utils.LogsUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+
 
 
 public class cuentaHandler {
@@ -24,7 +26,9 @@ public class cuentaHandler {
                 httpUtils.enviarRespuesta(exchange,405, "metodo no existente");
                 return;
             }
+            LogsUtils.logInfo("Inico de la peticion GET /cuenta");
             if (JwtUtils.valAdmin(jwt)){
+                LogsUtils.logInfo("Usuario Admin");
                 handlerGetAdmin(exchange);
             }else{
                 handlerGetUser(exchange, jwt);
@@ -44,6 +48,7 @@ public class cuentaHandler {
         }
 
         JSONObject obj = new JSONObject(cuenta);
+        LogsUtils.logInfo("informacion Enviada \n " + obj.toString());
         httpUtils.enviarRespuesta(exchange, 200, obj.toString());
     }
 
@@ -67,6 +72,7 @@ public class cuentaHandler {
             jsonArray.put(obj);
         }
 
+        LogsUtils.logInfo("informacion Enviada \n " + jsonArray.toString());
         httpUtils.enviarRespuesta(exchange, 200, jsonArray.toString());
     }
 

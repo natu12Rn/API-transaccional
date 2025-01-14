@@ -21,7 +21,6 @@ public class app {
         server.createContext("/api/Registrar", new userHandler());
         server.createContext("/api/cuenta", new handlerProtected());
 
-
         server.setExecutor(null);
         server.start();
         System.out.println("Server started on port https://localhost:8080");
