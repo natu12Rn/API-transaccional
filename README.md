@@ -341,3 +341,4 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 - **JSON In java (org.json)**
 - **JWT**
 - **PostgreSQL JDBC Driver**
+- **Log4J**
