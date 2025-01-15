@@ -25,6 +25,5 @@ public class app {
         server.setExecutor(null);
         server.start();
         LogsUtils.logInfo("Server started on port https://localhost:8080");
-        System.out.println("Server started on port https://localhost:8080");
     }
 }
