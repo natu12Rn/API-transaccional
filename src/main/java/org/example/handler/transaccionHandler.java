@@ -44,16 +44,17 @@ public class transaccionHandler  {
     }
 
     private void handleGet(HttpExchange exchange, JWT jwt) throws IOException {
-        LogsUtils.logInfo("Inico de la peticion GET /api/transaccion");
+        LogsUtils.logProcesInfo("Inico de la peticion GET /api/transaccion");
         List<transaccion> transaccionList;
 
         if (JwtUtils.valAdmin(jwt)) {
-            LogsUtils.logInfo("Usuario admin");
+            LogsUtils.logProcesInfo("Usuario admin");
              transaccionList = transaccionDAO.buscarTodas();
         }else {
              transaccionList = transaccionDAO.buscarTransacciones(jwt.getString("numCuenta"));
         }
         if(transaccionList == null){
+            LogsUtils.logEnvio();
             HttpUtils.enviarRespuesta(exchange, 500, "No se encontro las transacciones");
             return;
         }
@@ -72,17 +73,18 @@ public class transaccionHandler  {
             jsonArray.put(obj);
         }
 
-        LogsUtils.logInfo("Informcaion enviada \n" + jsonArray.toString());
+        LogsUtils.logProcesInfo("Informcaion enviada --> " + jsonArray.toString());
+        LogsUtils.logEnvio();
         HttpUtils.enviarRespuesta(exchange, 200, jsonArray.toString());
     }
 
     private void handlePost(HttpExchange exchange, JWT jwt) throws IOException, SQLException {
-        LogsUtils.logInfo("Inico de la peticion POST /api/transaccion");
+        LogsUtils.logProcesInfo("Inico de la peticion POST /api/transaccion");
 
         String requestBody = HttpUtils.leerRequestBody(exchange);
         JSONObject obj = new JSONObject(requestBody);
 
-        LogsUtils.logInfo("Informacion recibida \n"+ obj.toString());
+        LogsUtils.logProcesInfo("Informacion recibida --> "+ obj.toString());
 
         transaccion transaccion = new transaccion();
         transaccionDAO.getCuenta(transaccion, jwt.getString("numCuenta"));
@@ -107,24 +109,26 @@ public class transaccionHandler  {
     }
 
     private void deposito(transaccion T, HttpExchange exchange, String numCuenta) throws IOException, SQLException {
-        LogsUtils.logInfo("Tipo de transaccion -> deposito");
+        LogsUtils.logProcesInfo("Tipo de transaccion --> deposito");
 
         if (T.getMonto().compareTo(BigDecimal.ZERO) < 0){
             HttpUtils.enviarRespuesta(exchange, 400, "Monto negativo");
             return;
         }
         if (!transaccionDAO.Deposito(T, numCuenta)){
+            LogsUtils.logEnvio();
             HttpUtils.enviarRespuesta(exchange, 400, "No se puede depositar");
             return;
         }
 
         JSONObject result = new JSONObject(T);
-        LogsUtils.logInfo("Informacion enviada \n"+ result.toString());
+        LogsUtils.logProcesInfo("Informacion enviada --> "+ result.toString());
+        LogsUtils.logEnvio();
         HttpUtils.enviarRespuesta(exchange, 200, result.toString());
     }
 
     private void retiro(transaccion T, HttpExchange exchange, String numCuenta  ) throws IOException, SQLException {
-        LogsUtils.logInfo("Tipo de transaccion -> retiro");
+        LogsUtils.logProcesInfo("Tipo de transaccion --> retiro");
 
         BigDecimal minimo = new BigDecimal("10000.00");
 
@@ -133,16 +137,18 @@ public class transaccionHandler  {
             return;
         }
         if (!transaccionDAO.retirar(T, numCuenta)){
+            LogsUtils.logEnvio();
             HttpUtils.enviarRespuesta(exchange, 400, "No se puede retirar");
             return;
         }
         JSONObject result = new JSONObject(T);
-        LogsUtils.logInfo("Informacion enviada \n"+ result.toString());
+        LogsUtils.logProcesInfo("Informacion enviada -->"+ result.toString());
+        LogsUtils.logEnvio();
         HttpUtils.enviarRespuesta(exchange, 200, result.toString());
     }
 
     private void tranferencia(transaccion T, HttpExchange exchange, String numCuenta) throws IOException, SQLException {
-        LogsUtils.logInfo("Tipo de transaccion -> tranferencia");
+        LogsUtils.logProcesInfo("Tipo de transaccion --> tranferencia");
 
         if (T.getMonto().compareTo(BigDecimal.ZERO) < 0){
             HttpUtils.enviarRespuesta(exchange, 400, "Monto negativo");
@@ -153,12 +159,14 @@ public class transaccionHandler  {
             return;
         }
         if (!transaccionDAO.transferencia(T,numCuenta)){
+            LogsUtils.logEnvio();
             HttpUtils.enviarRespuesta(exchange, 400, "No se puede transferir");
             return;
         }
 
         JSONObject result = new JSONObject(T);
-        LogsUtils.logInfo("Informacion enviada \n"+ result.toString());
+        LogsUtils.logProcesInfo("Informacion enviada --> "+ result.toString());
+        LogsUtils.logEnvio();
         HttpUtils.enviarRespuesta(exchange, 200, result.toString());
     }
 

@@ -2,7 +2,7 @@ package org.example.dto;
 
 import io.fusionauth.jwt.domain.JWT;
 
-import org.example.config.Database;
+import org.example.config.database.ConnectionManager;
 import org.example.models.cuenta;
 import org.example.models.users;
 import org.example.utils.LogsUtils;
@@ -12,23 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class cuentaDAO {
+    private static final ConnectionManager connectionManager = ConnectionManager.getInstance();
 
     public static cuenta CuentaPersonal(JWT jwt) {
         cuenta cuenta = new cuenta();
-        String sql = "SELECT C.saldo, tc.nombre AS tipo_cuenta FROM cuenta c\n" +
-                "INNER JOIN public.tipo_cuenta tc on tc.tipo_cuenta_id = c.tipo_cuenta_id\n" +
-                "WHERE numero_cuenta= ?";
+        String sql = "SELECT C.saldo, tc.nombre AS tipo_cuenta FROM cuenta c INNER JOIN public.tipo_cuenta tc on tc.tipo_cuenta_id = c.tipo_cuenta_id WHERE numero_cuenta= ?";
 
-        try(Connection conn = Database.getConnection();
-        PreparedStatement ps = conn.prepareStatement(sql)) {
+        try(Connection conn = connectionManager.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
+            LogsUtils.logProcesInfo("Ejecutando query --> " + sql);
 
             ps.setString(1, jwt.getString("numCuenta"));
             ResultSet rs = ps.executeQuery();
 
             if(!rs.next()) {
-                LogsUtils.logWarn("No se encontro la cuenta: "+ jwt.getString("numCuenta"));
+                LogsUtils.logProcesWarn("No se encontro la cuenta: "+ jwt.getString("numCuenta"));
                 return null;
 
             }
@@ -39,27 +38,25 @@ public class cuentaDAO {
 
             return cuenta;
 
-        }catch (SQLException e){
-            LogsUtils.logError(e.getMessage());
+        }catch (Exception e){
+            LogsUtils.logProcesError(e.getMessage());
             return null;
         }
     }
 
     public static List<users> listCuentas() {
         List<users> cuentas = new ArrayList<>();
-        String sql = "SELECT u.login, u.name, u.email, c.numero_cuenta, u.active ,tc.nombre AS tipo_cuenta FROM sec_users u\n" +
-                "LEFT JOIN public.cuenta c on u.login = c.login_usuario\n" +
-                "inner join public.tipo_cuenta tc on c.tipo_cuenta_id = tc.tipo_cuenta_id";
-        try(Connection conn = Database.getConnection();
+        String sql = "SELECT u.login, u.name, u.email, c.numero_cuenta, u.active ,tc.nombre AS tipo_cuenta FROM sec_users u LEFT JOIN public.cuenta c on u.login = c.login_usuario inner join public.tipo_cuenta tc on c.tipo_cuenta_id = tc.tipo_cuenta_id";
+        try(Connection conn = connectionManager.getConnection();
             Statement stmt = conn.createStatement();){
 
-            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
+            LogsUtils.logProcesInfo("Ejecutando query --> " + sql);
 
             stmt.execute(sql);
             ResultSet rs = stmt.executeQuery(sql);
 
             if(!rs.next()) {
-                LogsUtils.logWarn("No se encontraron cuentas");
+                LogsUtils.logProcesWarn("No se encontraron cuentas");
                 return null;
             }
 
@@ -76,18 +73,18 @@ public class cuentaDAO {
 
             return cuentas;
 
-        }catch (SQLException e){
-            LogsUtils.logError(e.getMessage());
+        }catch (Exception e){
+            LogsUtils.logProcesError(e.getMessage());
             return null;
         }
     }
 
     public boolean insert(users user) {
         String sql = "CALL sp_crearcuenta(?,?,?,?,?,?,?,?,?)";
-        try(Connection conn = Database.getConnection();
+        try(Connection conn = connectionManager.getConnection();
             CallableStatement cstmt = conn.prepareCall(sql) ) {
 
-            LogsUtils.logInfo("Ejecutando SP -> \n " + sql);
+            LogsUtils.logProcesInfo("Ejecutando SP -->" + sql);
 
             cstmt.setString(1,user.getLogin());
             cstmt.setString(2,user.getPassword());
@@ -102,33 +99,33 @@ public class cuentaDAO {
             cstmt.execute();
 
             boolean result = cstmt.getBoolean(9);
-            LogsUtils.logInfo("Cuenta creada -> " + result);
+            LogsUtils.logProcesInfo("Cuenta creada -> " + result);
             return result;
-        }catch (SQLException e){
-            LogsUtils.logError(e.getMessage());
+        }catch (Exception e){
+            LogsUtils.logProcesError(e.getMessage());
             return false;
         }
     }
 
     public boolean validacionNumCuneta(String numCuneta) {
         String sql = "SELECT valnumcuenta(?)";
-        try(Connection conn = Database.getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try(Connection conn = connectionManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            LogsUtils.logInfo("Ejecutando query -> \n " + sql);
+            LogsUtils.logProcesInfo("Ejecutando query --> " + sql);
 
             pstmt.setString(1, numCuneta);
             ResultSet rs = pstmt.executeQuery();
 
             if (!rs.next()) {
-                LogsUtils.logWarn("existencia de numero de cuenta -> "+ numCuneta);
+                LogsUtils.logProcesWarn("existencia de numero de cuenta -> "+ numCuneta);
                 return false;
             }
 
-            LogsUtils.logInfo("Numero de cuenta valido -> "+ numCuneta);
+            LogsUtils.logProcesInfo("Numero de cuenta valido -> "+ numCuneta);
             return true;
-        }catch (SQLException e){
-            LogsUtils.logError(e.getMessage());
+        }catch (Exception e){
+            LogsUtils.logProcesError(e.getMessage());
             return false;
         }
     }

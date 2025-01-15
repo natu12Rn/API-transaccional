@@ -342,3 +342,4 @@ Este proyecto es un sistema transaccional que permite a los usuarios realizar di
 - **JWT**
 - **PostgreSQL JDBC Driver**
 - **Log4J**
+- **DBPool**

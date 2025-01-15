@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsServer;
 import org.example.handler.handlerProtected;
 import org.example.handler.userHandler;
+import org.example.utils.LogsUtils;
 import org.example.utils.SSLUtils;
 
 
@@ -23,6 +24,7 @@ public class app {
 
         server.setExecutor(null);
         server.start();
+        LogsUtils.logInfo("Server started on port https://localhost:8080");
         System.out.println("Server started on port https://localhost:8080");
     }
 }

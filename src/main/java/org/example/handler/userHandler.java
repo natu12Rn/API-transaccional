@@ -44,12 +44,12 @@ public class userHandler implements HttpHandler {
         }
     }
     private void handlerPostLogin(HttpExchange exchange) throws IOException {
-        LogsUtils.logInfo("Inico de la peticion GET /api/login");
+        LogsUtils.logProcesInfo("Inicio de la peticion GET /api/login");
 
         String requestBody = httpUtils.leerRequestBody(exchange);
         JSONObject obj = new JSONObject(requestBody);
 
-        LogsUtils.logInfo("Informcaion resividada \n "+obj.toString());
+        LogsUtils.logProcesInfo("Informcaion resividada --> "+obj.toString());
 
         users user = new users();
         user.setPassword(obj.getString("password"));
@@ -66,17 +66,19 @@ public class userHandler implements HttpHandler {
         String encryptor = Utils.encrypt(user.getPassword());
         user.setPassword(encryptor);
 
-        LogsUtils.logInfo("Informacion encriptada \n "+ user.getPassword());
+        LogsUtils.logProcesInfo("Informacion encriptada --> "+ user.getPassword());
 
         if (user.getLogin() != null) {
-            LogsUtils.logInfo("Buscando por login");
+            LogsUtils.logProcesInfo("Buscando por login");
             if (!dao.validacion(user)){
+                LogsUtils.logEnvio();
                 httpUtils.enviarRespuesta(exchange, 401 , "no se encontro la cuenta revise");
                 return ;
             }
         }else if (user.getEmail() != null){
-            LogsUtils.logInfo("Buscando por email");
+            LogsUtils.logProcesInfo("Buscando por email");
             if (!dao.validacion2(user)){
+                LogsUtils.logEnvio();
                 httpUtils.enviarRespuesta(exchange, 401 , "no se encontro la cuenta revise");
                 return ;
             }
@@ -84,36 +86,40 @@ public class userHandler implements HttpHandler {
 
         String token = JwtUtils.generateToken(user);
         if (token==null){
-            LogsUtils.logWarn("Problemas con el token");
+            LogsUtils.logProcesWarn("Problemas con el token");
+            LogsUtils.logEnvio();
             httpUtils.enviarRespuesta(exchange, 400 , "problemas con el token");
             return ;
         }
 
         JSONObject obj = new JSONObject("{\"token\":\""+token+"\"}");
-        LogsUtils.logInfo("Informacion enviada \n "+obj.toString());
+        LogsUtils.logProcesInfo("Informacion enviada --> "+obj.toString());
+        LogsUtils.logEnvio();
         httpUtils.enviarRespuesta(exchange, 200 , obj.toString());
     }
 
     private void handlerPostRegisterd(HttpExchange exchange) throws IOException{
+        LogsUtils.logProcesInfo("Inicio de la peticion POST /api/Registrar");
+
         String requestBody = httpUtils.leerRequestBody(exchange);
         JSONObject obj = new JSONObject(requestBody);
 
-        LogsUtils.logInfo("Informacion resividada \n "+obj.toString());
+        LogsUtils.logProcesInfo("Informacion resividada --> "+obj.toString());
 
         if(obj.getString("login").isEmpty() || obj.getString("password").isEmpty()
                 ||obj.getString("passwordConfirm").isEmpty() || obj.getString("email").isEmpty()
                 || obj.getString("name").isEmpty() || obj.getString("tipo").isEmpty()){
-            LogsUtils.logWarn("Todos los campos estan vacios");
+            LogsUtils.logProcesWarn("faltan por llenar campos");
             httpUtils.enviarRespuesta(exchange, 400 , "todos los campos tiene que estar llenos");
             return ;
         }
         if (!Utils.valCorreo(obj.getString("email"))){
-            LogsUtils.logWarn("Email incorrecto");
+            LogsUtils.logProcesWarn("Email incorrecto");
             httpUtils.enviarRespuesta(exchange, 400 , "email incorrecto");
             return ;
         }
         if (!Utils.ValPassword(obj.getString("password"))){
-            LogsUtils.logWarn("Password incorrecto");
+            LogsUtils.logProcesWarn("Password incorrecto");
             httpUtils.enviarRespuesta(exchange, 400 , "password incorrecto");
             return ;
         }
@@ -139,13 +145,15 @@ public class userHandler implements HttpHandler {
         user.setActivo("Y");
 
         if (!cuentaDao.insert(user)){
+            LogsUtils.logEnvio();
             httpUtils.enviarRespuesta(exchange, 400, "Usuario ya registrado");
             return;
         }
 
         user.getCuenta().setSaldo(new BigDecimal("1000000.00"));
         JSONObject obj = new JSONObject(user);
-        LogsUtils.logInfo("Informacion enviada \n "+obj.toString());
+        LogsUtils.logProcesInfo("Informacion enviada --> "+obj.toString());
+        LogsUtils.logEnvio();
         httpUtils.enviarRespuesta(exchange, 200, obj.toString());
     }
 

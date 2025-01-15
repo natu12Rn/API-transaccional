@@ -18,7 +18,6 @@ import java.util.List;
 
 public class cuentaHandler {
     private HttpUtils httpUtils = new HttpUtils();
-    private static cuentaDAO cuentaDao = new cuentaDAO();
 
     public void handle(HttpExchange exchange, JWT jwt) throws IOException {
         try{
@@ -26,9 +25,9 @@ public class cuentaHandler {
                 httpUtils.enviarRespuesta(exchange,405, "metodo no existente");
                 return;
             }
-            LogsUtils.logInfo("Inico de la peticion GET /cuenta");
+            LogsUtils.logProcesInfo("Inico de la peticion GET /api/cuenta");
             if (JwtUtils.valAdmin(jwt)){
-                LogsUtils.logInfo("Usuario Admin");
+                LogsUtils.logProcesInfo("Usuario Admin");
                 handlerGetAdmin(exchange);
             }else{
                 handlerGetUser(exchange, jwt);
@@ -43,12 +42,14 @@ public class cuentaHandler {
         cuenta cuenta = cuentaDAO.CuentaPersonal(jwt);
 
         if (cuenta == null){
+            LogsUtils.logEnvio();
             httpUtils.enviarRespuesta(exchange, 400, "No se encontro la cuenta");
             return;
         }
 
         JSONObject obj = new JSONObject(cuenta);
-        LogsUtils.logInfo("informacion Enviada \n " + obj.toString());
+        LogsUtils.logProcesInfo("informacion Enviada --> " + obj.toString());
+        LogsUtils.logEnvio();
         httpUtils.enviarRespuesta(exchange, 200, obj.toString());
     }
 
@@ -56,6 +57,7 @@ public class cuentaHandler {
         List<users> listUser = cuentaDAO.listCuentas();
 
         if (listUser == null){
+            LogsUtils.logEnvio();
             httpUtils.enviarRespuesta(exchange, 400, "No existente");
         }
 
@@ -72,7 +74,8 @@ public class cuentaHandler {
             jsonArray.put(obj);
         }
 
-        LogsUtils.logInfo("informacion Enviada \n " + jsonArray.toString());
+        LogsUtils.logProcesInfo("informacion Enviada --> " + jsonArray.toString());
+        LogsUtils.logEnvio();
         httpUtils.enviarRespuesta(exchange, 200, jsonArray.toString());
     }
 

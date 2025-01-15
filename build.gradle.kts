@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    implementation("net.snaq:dbpool:7.0.1")
     implementation("org.json:json:20231013")
     implementation("io.fusionauth:fusionauth-jwt:5.3.3")
     implementation("org.postgresql:postgresql:42.7.2")
